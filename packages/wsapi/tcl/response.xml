@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap-env:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <soap-env:Body>
+  <CheckDateTimeResponse xmlns="urn:tcl:datetime">
+   <DateTime>2001-10-14</DateTime>
+   <IsDateTime>True</IsDateTime>
+  </CheckDateTimeResponse>
+ </soap-env:Body>
+</soap-env:Envelope>
