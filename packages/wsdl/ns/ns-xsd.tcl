@@ -186,12 +186,18 @@ proc ::wsdb::types::xsd::decimal::validate {
 ::wsdl::types::simpleType::restrictDecimal xsd decimal xsd::string {pattern {\A(?:([\-+]?)([0-9]*)(?:([\.]?)|([\.])([0-9]+))){1}\Z}}
 
 ::wsdl::types::simpleType::restrictDecimal xsd integer tcl::integer {fractionDigits 0}
-::wsdl::types::simpleType::restrictDecimal xsd int tcl::integer {fractionDigits 0} 
+::wsdl::types::simpleType::restrictDecimal xsd long tcl::integer {maxInclusive 9223372036854775807 minInclusive -9223372036854775808}
+::wsdl::types::simpleType::restrictDecimal xsd int tcl::integer {minInclusive -2147483648 maxInclusive 2147483647} 
 ::wsdl::types::simpleType::restrictDecimal xsd nonPositiveInteger xsd::integer {maxInclusive 0}
 ::wsdl::types::simpleType::restrictDecimal xsd negativeInteger  xsd::integer {maxInclusive -1}
 ::wsdl::types::simpleType::restrictDecimal xsd short xsd::integer {minInclusive -32767 maxInclusive 32767}
 ::wsdl::types::simpleType::restrictDecimal xsd byte xsd::integer {minInclusive -127 maxInclusive 127}
-
+::wsdl::types::simpleType::restrictDecimal xsd nonNegativeInteger xsd::integer {minInclusive 0}
+::wsdl::types::simpleType::restrictDecimal xsd positiveInteger xsd::nonNegativeInteger {minInclusive 1}
+::wsdl::types::simpleType::restrictDecimal xsd unsignedLong xsd::nonNegativeInteger {maxInclusive 18446744073709551615}
+::wsdl::types::simpleType::restrictDecimal xsd unsignedInt xsd::integer {maxInclusive 4294967295 minInclusive 0}
+::wsdl::types::simpleType::restrictDecimal xsd unsignedShort xsd::unsignedInt {maxInclusive 65535}
+::wsdl::types::simpleType::restrictDecimal xsd unsignedByte xsd::unsignedShort {maxInclusive 255}
 
 namespace eval ::wsdb::types::xsd {
 

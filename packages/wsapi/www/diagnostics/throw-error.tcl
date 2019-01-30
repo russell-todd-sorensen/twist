@@ -1,0 +1,1 @@
+return -code error "This is an error"

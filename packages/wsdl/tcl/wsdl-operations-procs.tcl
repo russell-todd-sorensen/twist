@@ -32,7 +32,7 @@ proc ::wsdl::operations::new {
     set procArgs [list]
     set operationArgs [list]
     foreach argList $inputElementData {
-	#log Debug "wsdl::operations::new argList = '$argList'"
+	    log Notice "wsdl::operations::new argList = '$argList'"
 
 	# This Array will remain available procArgsList length = 1;
 	if {[array exists elementData]} {
@@ -42,14 +42,14 @@ proc ::wsdl::operations::new {
 	set argName [::wsdl::elements::modelGroup::sequence::getElementData\
 			 $argList elementData];
 
-	log Debug "wsdl::operations::new elementData = [array get elementData]"
+	    log Notice "wsdl::operations::new elementData = [array get elementData]"
 	# Default Values
 	if {$elementData(maxOccurs) > 1} { 
 	    lappend inputConversionList $argName List
 	} else {
 	    lappend inputConversionList $argName Value
 	}
-	if {"$elementData(minOccurs)" eq "0"} {
+	if {"$elementData(minOccurs)" eq "0" && [info exists elementData(default)]} {
 	    append inputDefaultCodeBlock "
     set $argName [list $elementData(default)]"
 	}
