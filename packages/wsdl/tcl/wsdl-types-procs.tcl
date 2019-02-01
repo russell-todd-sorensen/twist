@@ -668,8 +668,8 @@ proc ::wsdl::elements::modelGroup::sequence::addReference {
 namespace eval ::wsdb::elements::${schemaAlias}::${parentElement}::$element \{
     variable base $base
     variable facetList \{[array get ElementArray]\}
-    variable validate \[set ::wsdb::\$\{base\}::validate]
-    variable new      \[set ::wsdb::\$\{base\}::new]
+    variable validate  \[set ::wsdb::\$\{base\}::validate]
+    variable new       \[set ::wsdb::\$\{base\}::new]
 
 \}"
 
@@ -1053,16 +1053,16 @@ proc ::wsdl::elements::modelGroup::sequence::new {
         }
     }
 
-        append script "
+    append script "
 
 namespace eval ::wsdb::elements::${schemaAlias}::$typeName \{
 
-    variable Children \{$Elements\}
+    variable Children  \{$Elements\}
     variable MinOccurs
     variable MaxOccurs
     variable facetList \[list form Value name $typeName\]
-    variable validate \[namespace current\]::Validate${typeName}
-    variable new      \[namespace current\]::new"
+    variable validate  \[namespace current\]::Validate${typeName}
+    variable new       \[namespace current\]::new"
 
     foreach Element $Elements {
         append script "
