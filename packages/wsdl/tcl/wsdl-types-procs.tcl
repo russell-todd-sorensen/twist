@@ -613,6 +613,7 @@ proc ::wsdl::elements::modelGroup::sequence::getElementData {
     Child
     {ArrayName ""}
 } {
+    <ws>log Notice "getElementData Child='$Child'"
     set ChildNameType [lindex $Child 0]
     if {[set first [string first ":" $ChildNameType]] > -1} {
         set Element [string range $ChildNameType 0 [expr $first -1 ]]
@@ -628,7 +629,7 @@ proc ::wsdl::elements::modelGroup::sequence::getElementData {
     }
 
     # Seed facetArray with default values:
-    array set facetArray {minOccurs {} maxOccurs {} form Value}
+    array set facetArray {minOccurs {} maxOccurs {}}
     array set facetArray [lindex $Child 1]
     array set facetArray [minMaxList $facetArray(minOccurs) $facetArray(maxOccurs)]
 
@@ -641,9 +642,9 @@ proc ::wsdl::elements::modelGroup::sequence::getElementData {
 
     upvar $ArrayName ElementArray
     array set ElementArray [list name $Element type $Type minOccurs $facetArray(minOccurs)\
-            maxOccurs $facetArray(maxOccurs) facets [array get facetArray] \
-            form $facetArray(form)]
+            maxOccurs $facetArray(maxOccurs) facets [array get facetArray]]
 
+    #set ElementArray(form) uuu
     if {[info exists facetArray(default)]} {
         set ElementArray(default) $facetArray(default)
     }
@@ -667,10 +668,11 @@ proc ::wsdl::elements::modelGroup::sequence::addReference {
 
 namespace eval ::wsdb::elements::${schemaAlias}::${parentElement}::$element \{
     variable base $base
+    variable reference true
     variable facetList \{[array get ElementArray]\}
     variable validate  \[set ::wsdb::\$\{base\}::validate]
     variable new       \[set ::wsdb::\$\{base\}::new]
-
+    variable refElementName $element
 \}"
 
 }
@@ -734,14 +736,13 @@ proc ${namespace}::Validate$typeName \{ namespace \} \{
 
     foreach Element $Elements {
         append script "
-            $Element \{
+                $Element \{
                 if \{!\[eval \[linsert \$validate_$Element end \$childPart\]\]\} \{
                     ::wsdl::elements::noteFault \$namespace \[list 2 $Element \$childPart\]
                     incr COUNT(.INVALID)
                     break
                 \}
             \}"
-
     }
     append script "
             default \{
@@ -802,7 +803,7 @@ namespace eval ::wsdb::elements::${schemaAlias}::${parentElement}::$element \{
     \}
 
     proc new \{ namespace value \} \{
-         ::xml::element::appendText \[::xml::element::append \$namespace $element] .TEXT \$value
+        ::xml::element::appendText \[::xml::element::append \$namespace $element] .TEXT \$value
     \}
 \}"
 
@@ -955,6 +956,7 @@ proc ::wsdl::elements::modelGroup::sequence::writeNewProc {
     namespace
 
 } {
+
     set script ""
 
     if {[info exists ${namespace}::base]} {
@@ -962,6 +964,7 @@ proc ::wsdl::elements::modelGroup::sequence::writeNewProc {
     } else {
         set Base $namespace
     }
+    log Notice "writeNewProc Base='$Base'"
 
     set Children [set ${Base}::Children]
     set ChildCount [llength $Children]

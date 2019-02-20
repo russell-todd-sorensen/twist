@@ -32,30 +32,57 @@
 
 <ws>element sequence address::fromToEnvelope {
     {envelopeId:address::testId }
-    {fromAddr:elements::address::fromAddress {form List}}
-    {toAddr:elements::address::toAddress {form List}}
+    {fromAddr:elements::address::fromAddress }
+    {toAddr:elements::address::toAddress }
 }
 
 
 <ws>proc address::sendMail {
-    {From:elements::address::fromToEnvelope }
+    {fromToEnvelope }
 } {
-    return $From
+    set vars [info vars]
+    set result [list]
+    ns_log Notice "vars='[info vars]'"
+    foreach var $vars {
+        lappend result "$var = '[set $var]' "
+    }
+    <ws>log Notice "sendMail2=$result"
+    <ws>log Notice "$envelopeId='$envelopeId', fromAddr='$fromAddr', toAddr='$toAddr'"
+    # get fromAddr/toAddr data
+    ::xml::childElementsAsNameValueList $fromAddr fromAddrList
+    ::xml::childElementsAsNameValueList $toAddr toAddrList
+
+    foreach {n v} $fromAddrList {
+        lappend fromAddrData $v
+    }
+    foreach {n v} $toAddrList {
+        lappend toAddrData $v
+    }
+    <ws>log Notice "fromAddrData='$fromAddrData'"
+    <ws>log Notice "toAddrData='$toAddrData'"
+    return [list $envelopeId $fromAddrData $toAddrData]
 } returns {
     fromToEnvelope
 }
 
 <ws>proc address::sendMail2 {
     {envelopeId:address::testId {minOccurs 1 default 125}}
-    {fromAddress:elements::address::fromAddress {form Element minOccurs 1 default {{1} {x} {y} {z} {a} {WA} {98198}}}}
-    {toAddress:elements::address::toAddress {form List minOccurs 1 default {{2} {a} {b} {c} {x} {WA} {98198-5115}}}}
+    {fromAddress:elements::address::fromAddress {minOccurs 1}}
+    {toAddress:elements::address::toAddress {minOccurs 1}}
 } {
+    set vars [info vars]
+    set result [list]
+    ns_log Notice "vars='[info vars]'"
+    foreach var $vars {
+        lappend result "$var = '[set $var]' "
+    }
+    <ws>log Notice "sendMail2=$result"
     <ws>log Notice "$envelopeId='$envelopeId', fromAddress='$fromAddress', toAddress='$toAddress'"
     return [list $envelopeId $fromAddress $toAddress]
 } returns {
     {envelopeId:address::testId }
-    {fromAddrress:elements::address::fromAddress {form List}}
-    {toAddrress:elements::address::toAddress {form List}}
+    {fromAddress:elements::address::fromAddress }
+    {toAddress:elements::address::toAddress }
 }
 
 <ws>proc address::EchoAddress {
@@ -70,6 +97,10 @@
     return $result
 } returns {
     fromAddress
+}
+
+namespace eval ::wsdb::operations::address::sendMailOperation {
+    variable conversionList {envelopeId Value fromAddr Element toAddr Element}
 }
 <ws>namespace finalize ::address
 <ws>return ::address

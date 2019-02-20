@@ -22,9 +22,8 @@ namespace eval ::wsdl {
 
 
 namespace eval ::wsdl::definitions {
-    
 
-    variable xmlSchemaNS 
+    variable xmlSchemaNS
     variable wsdlsoapNS
     variable wsdlhttpNS
     variable wsdlNS
@@ -43,40 +42,40 @@ namespace eval ::wsdl::definitions {
     set wsdlNS(namespace) "http://schemas.xmlsoap.org/wsdl/"
 
     foreach ns {xmlSchemaNS wsdlsoapNS wsdlhttpNS wsdlNS} {
-	lappend attributeList xmlns:[set ${ns}(prefix)] [set ${ns}(namespace)]
+        lappend attributeList xmlns:[set ${ns}(prefix)] [set ${ns}(namespace)]
     }
-
 }
 
 
 proc ::wsdl::new {targetNamespace {tnsPrefix tns} {attributeList {
 
-    	xmlns:s1 "http://microsoft.com/wsdl/types/" 
-	xmlns:http "http://schemas.xmlsoap.org/wsdl/http/" 
-	xmlns:soap "http://schemas.xmlsoap.org/wsdl/soap/" 
-	xmlns:s "http://www.w3.org/2001/XMLSchema" 
-	xmlns:soapenc "http://schemas.xmlsoap.org/soap/encoding/" 
-	xmlns:tm "http://microsoft.com/wsdl/mime/textMatching/" 
-	xmlns:mime "http://schemas.xmlsoap.org/wsdl/mime/" 
-	xmlns:wsdl "http://schemas.xmlsoap.org/wsdl/"
-    }} } {
+        xmlns:s1 "http://microsoft.com/wsdl/types/"
+        xmlns:http "http://schemas.xmlsoap.org/wsdl/http/"
+        xmlns:soap "http://schemas.xmlsoap.org/wsdl/soap/"
+        xmlns:s "http://www.w3.org/2001/XMLSchema"
+        xmlns:soapenc "http://schemas.xmlsoap.org/soap/encoding/"
+        xmlns:tm "http://microsoft.com/wsdl/mime/textMatching/"
+        xmlns:mime "http://schemas.xmlsoap.org/wsdl/mime/"
+        xmlns:wsdl "http://schemas.xmlsoap.org/wsdl/"
+        }}
+    } {
 
-    namespace eval ::wsdl::${targetNamespace} { 
+    namespace eval ::wsdl::${targetNamespace} {
 
-	variable Initialized 0
+        variable Initialized 0
     }
 
     if {"$tnsPrefix" ne ""} {
-	set tnsQName  [join [list xmlns ${tnsPrefix}] ":"]
+        set tnsQName  [join [list xmlns ${tnsPrefix}] ":"]
     } else {
-	set tnsQName  xmlns
+        set tnsQName  xmlns
     }
 
     lappend attributeList $tnsQName $targetNamespace
     lappend attributeList targetNamespace $targetNamespace
 
     namespace eval ::wsdl::${targetNamespace}::definitions \
-	"[list variable Attributes $attributeList]"
+    "[list variable Attributes $attributeList]"
 
     namespace eval ::wsdl::${targetNamespace}::definitions::types { }
 
@@ -85,10 +84,10 @@ proc ::wsdl::new {targetNamespace {tnsPrefix tns} {attributeList {
 proc ::wsdl::printChildren { { namespace ""} { depth 0} } {
 
     set result ""
-    incr depth 
+    incr depth
     foreach child [lsort [namespace children "$namespace"]] {
-	append result "[string repeat " " "$depth"]$child\n"
-	append result [::wsdl::printChildren "$child" "$depth"]
+        append result "[string repeat " " "$depth"]$child\n"
+        append result [::wsdl::printChildren "$child" "$depth"]
     }
     incr depth -1
     return $result

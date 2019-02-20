@@ -18,8 +18,8 @@ proc ::wsdb::schema::init { } {
     variable initialized
 
     if {!$initialized} {
-	set aliasMap [list]
-	set initialized 1
+        set aliasMap [list]
+        set initialized 1
     }
     return $initialized
 }
@@ -30,7 +30,7 @@ proc ::wsdb::schema::appendAliasMap { mapping } {
     variable initialized
 
     if {!$initialized} {
-	init
+        init
     }
     lappend aliasMap $mapping
 }
@@ -52,28 +52,27 @@ proc ::wsdb::schema::aliasExists { alias } {
 
     variable aliasMap
     if {[lsearch $aliasMap [list "$alias" "*"]] > -1} {
-	return 1
+        return 1
     } else {
-	return 0
+        return 0
     }
 }
 
 proc ::wsdb::schema::schemaItemExists { schema item } {
 
     if {[lsearch [set ::wsdb::schema::${schema}::schemaItems] $item] > -1} {
-	return 1
+        return 1
     } else {
-	return 0
+        return 0
     }
 }
 
 proc ::wsdb::schema::addSchemaItem { schema item } {
 
     if {[schemaItemExists $schema $item]} {
-	return 0
+        return 0
     } else {
-	lappend ::wsdb::schema::${schema}::schemaItems $item
-	return 1
+    lappend ::wsdb::schema::${schema}::schemaItems $item
+        return 1
     }
 }
-				     

@@ -13,8 +13,8 @@ namespace eval ::wsdl::messages {
 
 
 proc ::wsdl::messages::new {
-    messageNamespace 
-    messageName 
+    messageNamespace
+    messageName
     args
 } {
 
@@ -28,12 +28,10 @@ namespace eval ::wsdb::messages::${messageNamespace}::${messageName} \{
 
 
     foreach Part $args {
-	append script "
+        append script "
 lappend ::wsdb::messages::${messageNamespace}::${messageName}::Parts \"$Part\""
 
     }
 
     return $script
-
 }
-

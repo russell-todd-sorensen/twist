@@ -19,7 +19,7 @@
 <ws>doc type ::stock symbol "NYSE Trading Symbol"
 
 
-<ws>element sequence stock::StockResponse {  
+<ws>element sequence stock::StockResponse {
     {Symbol:stock::symbol          }
     {Quote:stock::quote           }
     {DateOfChange:stock::dateOfChange {minOccurs 0}}
@@ -39,8 +39,8 @@
     User supplies NYSE symbol and a verbose flag for additional data.}
 
 <ws>element sequence stock::StocksToQuote {
-    {Symbol:stockquoter::symbol {maxOccurs 8 default "MSFT"}}
-    {Verbose:stockquoter::verbose {minOccurs 0 default "1"}}
+    {Symbol:stock::symbol {maxOccurs 8 default "MSFT"}}
+    {Verbose:stock::verbose {minOccurs 0 default "1"}}
 }
 
 <ws>doc element stock StocksRequest {Multiple StockRequest in one document.}
@@ -56,14 +56,14 @@
     Symbol
     {Verbose {default 0 minOccurs 0} }
 } {
-    
+
     set StockValue [format %0.2f [expr 25.00 + [ns_rand 4].[format %0.2d [ns_rand 99]]]]
     if {$Verbose} {
 	return [list $Symbol $StockValue 2006-04-11T00:00:00Z "SomeName Corp. " 1 0.75 0.10]
     } else {
 	return [list $Symbol $StockValue]
     }
-    
+
 } returns { }
 
 # Example does same as ::stock::Stocks below

@@ -19,10 +19,10 @@ set sqns "stockquoter"
 ::wsdl::types::simpleType::new $sqns  verbose xsd::boolean
 
 # Quote
-::wsdl::types::simpleType::new $sqns quote xsd::float  
+::wsdl::types::simpleType::new $sqns quote xsd::float
 
 # Timestamp
-::wsdl::types::simpleType::new $sqns dateOfChange xsd::dateTime 
+::wsdl::types::simpleType::new $sqns dateOfChange xsd::dateTime
 
 # Trend
 ::wsdl::types::simpleType::restrictByEnumeration $sqns trend xsd::integer {-1 0 1}
@@ -33,7 +33,7 @@ set sqns "stockquoter"
 # LastMove
 ::wsdl::types::simpleType::new $sqns lastMove xsd::float
 
-# Name 
+# Name
 ::wsdl::types::simpleType::new $sqns name xsd::string
 
 # Fault Code
@@ -43,7 +43,7 @@ eval [::wsdl::elements::modelGroup::sequence::new $sqns StockRequest {
     {Symbol:stockquoter::symbol}
     {Verbose:stockquoter::verbose {minOccurs 0 default "1"}}
 }]
-	  
+
 
 
 eval [::wsdl::elements::modelGroup::sequence::new $sqns StockQuote {
@@ -104,14 +104,33 @@ eval [::wsdl::operations::new stockquoter StockQuotesOperation {
 
 namespace eval ::sq { }
 
+if {[info command ns_rand*] eq ""} {
+    proc ns_rand {{max 1}} {
+        switch -exact -- $max {
+            1 {
+                return [expr rand()]
+            }
+            0 {
+                return 1
+            }
+            default {
+                if {[string is integer -strict $max] && "$max" > 0} {
+                    return [expr round(rand() * $max)]
+                } else {
+                    return 1
+                }
+            }
+        }
+    }
+}
 
 proc ::sq::mystockquote { symbol {verbose 1} } {
 
     set StockValue [format %0.2f [expr 25.00 + [ns_rand 4].[format %0.2d [ns_rand 99]]]]
     if {$verbose} {
-	return [list $symbol $StockValue 2006-04-11T00:00:00Z "Microsoft Corp." 1 0.75 0.10]
+        return [list $symbol $StockValue 2006-04-11T00:00:00Z "Microsoft Corp." 1 0.75 0.10]
     } else {
-	return [list $symbol $StockValue]
+        return [list $symbol $StockValue]
     }
 }
 
@@ -120,7 +139,7 @@ proc ::sq::StockQuotes {SymbolList Verbose} {
 
     set resultList [list]
     foreach symbol $SymbolList {
-	lappend resultList [::sq::mystockquote $symbol $Verbose]
+        lappend resultList [::sq::mystockquote $symbol $Verbose]
     }
     return $resultList
 }

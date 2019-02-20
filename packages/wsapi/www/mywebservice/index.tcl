@@ -1,10 +1,10 @@
 namespace eval ::someothernamespace {
     proc hello { who } {
-	return "Hello $who"
+        return "Hello $who"
     }
 
     proc helloWorld { } {
-	return "Hello World!"
+        return "Hello World!"
     }
 }
 
@@ -34,7 +34,7 @@ namespace eval ::someothernamespace {
 <ws>type pattern mywebservice::code {[0-9]{4}} xsd::integer
 
 <ws>proc ::mywebservice::EchoCode {
-    {Code:mywebservice::code} 
+    {Code:mywebservice::code}
 } {
 
     return $Code
@@ -42,8 +42,8 @@ namespace eval ::someothernamespace {
 } returns {Code:mywebservice::code}
 
 # Standard Echo Server:
-<ws>proc ::mywebservice::Echo { 
-    Input 
+<ws>proc ::mywebservice::Echo {
+    Input
 } {
     return "$Input"
 
@@ -64,7 +64,7 @@ namespace eval ::someothernamespace {
 } returns {Product:decimal}
 
 # Use <ws>namespace import to copy an _existing_ proc
-# from another namespace. 
+# from another namespace.
 # The copied proc must take and return values, no refs.
 # This command allows developer to maintain code in one place
 # and expose it as a web service here.
@@ -75,7 +75,7 @@ namespace eval ::someothernamespace {
 
 <ws>namespace import ::mywebservice ::someothernamespace::hello returns {Yeah}
 <ws>namespace import ::mywebservice ::someothernamespace::helloWorld returns { Say }
-# Code above could be moved to library 
+# Code above could be moved to library
 
 # Try out restriction of decimal values
 <ws>type decimalRestriction mywebservice::Byte {minInclusive -127 maxInclusive 127} xsd::integer
@@ -97,10 +97,9 @@ namespace eval ::someothernamespace {
 <ws>proc ::mywebservice::EchoByte {
     ByteAsIntegerIn:mywebservice::Byte
 } {
-
     return [list $ByteAsIntegerIn]
 
-} returns {ByteAsIntegerOut:mywebservice::Byte} 
+} returns {ByteAsIntegerOut:mywebservice::Byte}
 
 
 # Example of using decimal validation proc to create canonical form
@@ -112,11 +111,11 @@ namespace eval ::someothernamespace {
     set IsTestDecimal [::wsdb::types::mywebservice::TestDecimal4::validate $StringToTest errorList canonList]
 
     if {$IsTestDecimal} {
-	set CanonicalValue [join $canonList ""]
-	set ErrorString "No Error"
+        set CanonicalValue [join $canonList ""]
+        set ErrorString "No Error"
     } else {
-	set CanonicalValue ""
-	set ErrorString [join $errorList]
+        set CanonicalValue ""
+        set ErrorString [join $errorList]
     }
 
     return [list $StringToTest $IsTestDecimal $CanonicalValue $ErrorString]
@@ -127,7 +126,7 @@ namespace eval ::someothernamespace {
 
 <ws>type stringRestriction mywebservice::myString {length 10}
 <ws>type stringRestriction mywebservice::myString2 {minLength 4 maxLength 25}
-<ws>type stringRestriction mywebservice::myString3 {pattern {\A[0-7]+\Z} maxLength 8}
+<ws>type stringRestriction mywebservice::myString3 {pattern {[0-7]+} maxLength 8}
 
 <ws>proc ::mywebservice::testString {
     MyString
@@ -138,25 +137,25 @@ namespace eval ::someothernamespace {
     set IsMyString [::wsdb::types::mywebservice::myString::validate $MyString errorList]
 
     if {$IsMyString} {
-	set ErrorForMyString "No Error in MyString"
+        set ErrorForMyString "No Error in MyString"
     } else {
-	set ErrorForMyString [join $errorList]
+        set ErrorForMyString [join $errorList]
     }
 
     set IsMyString2 [::wsdb::types::mywebservice::myString2::validate $MyOtherString errorList2]
 
     if {$IsMyString2} {
-	set ErrorForMyString2 "No Error in MyString"
+        set ErrorForMyString2 "No Error in MyString"
     } else {
-	set ErrorForMyString2 [join $errorList2]
+        set ErrorForMyString2 [join $errorList2]
     }
 
     set IsMyString3 [::wsdb::types::mywebservice::myString3::validate $MyThirdString errorList3]
 
     if {$IsMyString3} {
-	set ErrorForMyString3 "No Error in MyString"
+        set ErrorForMyString3 "No Error in MyString"
     } else {
-	set ErrorForMyString3 [join $errorList3]
+        set ErrorForMyString3 [join $errorList3]
     }
 
     return [list $MyString $ErrorForMyString $MyOtherString $ErrorForMyString2 $MyThirdString $ErrorForMyString3]
@@ -169,7 +168,7 @@ namespace eval ::someothernamespace {
     MyString3
     ErrorForMyString3
 }
-    
+
 
 # Code below is required to be on this page:
 # service address will be url of this page.
@@ -185,6 +184,3 @@ namespace eval ::someothernamespace {
 
 # Returns the correct response:
 <ws>return ::mywebservice
-
-
-

@@ -13,7 +13,6 @@ namespace eval ::xml { }
 namespace eval ::xml::instance {
 
     namespace import ::tws::log::log
-
 }
 
 # Takes tDOM toList

@@ -18,6 +18,6 @@ set serverName StockQuoter
 ::wsdl::definitions::new $serverName
 
 # Hostnames:
-set ::wsdb::servers::${serverName}::hostHeaderNames [list "maria:8080" "192.168.111.108:8888"]
+set ::wsdb::servers::${serverName}::hostHeaderNames [list "127.0.0.1:8899" "127.0.0.1:8899"]
 
 ::wsdl::server::listen $serverName

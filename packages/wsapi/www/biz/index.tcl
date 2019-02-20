@@ -19,6 +19,12 @@
     {Quantity:xsd::integer}
 }
 
+<ws>element sequence biz::XYZ {
+    {X}
+    {Y}
+    {Z}
+}
+
 <ws>element sequence biz::items {
     {Item:elements::biz::item {maxOccurs 10}}
 }
@@ -30,9 +36,13 @@
     {Items:elements::biz::items}
 }
 
-<ws>proc biz::EchoInvoice EchoInvoiceRequest:elements::biz::invoice {
+<ws>proc biz::EchoInvoice Invoice:elements::biz::invoice {
     return $Invoice
-} returns EchoInvoiceResponse:elements::biz::invoice
+} returns invoice
+
+<ws>proc biz::DoXYZ XYZ {
+    return [list $X $Y $Z]
+} returns { XYZ }
 
 <ws>namespace finalize ::biz
 
