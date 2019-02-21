@@ -664,7 +664,7 @@ proc ::wsdl::elements::modelGroup::sequence::addReference {
 
     set ValidateTypeTail [string map {__ _} [string map {: _} $base]]
 
-    return "
+    set returnCode "
 
 namespace eval ::wsdb::elements::${schemaAlias}::${parentElement}::$element \{
     variable base $base
@@ -674,7 +674,8 @@ namespace eval ::wsdb::elements::${schemaAlias}::${parentElement}::$element \{
     variable new       \[set ::wsdb::\$\{base\}::new]
     variable refElementName $element
 \}"
-
+    log Notice "addReference returnCode='$returnCode'"
+    return $returnCode
 }
 
 
@@ -736,7 +737,7 @@ proc ${namespace}::Validate$typeName \{ namespace \} \{
 
     foreach Element $Elements {
         append script "
-                $Element \{
+            $Element \{
                 if \{!\[eval \[linsert \$validate_$Element end \$childPart\]\]\} \{
                     ::wsdl::elements::noteFault \$namespace \[list 2 $Element \$childPart\]
                     incr COUNT(.INVALID)
@@ -802,8 +803,8 @@ namespace eval ::wsdb::elements::${schemaAlias}::${parentElement}::$element \{
         return \$Valid
     \}
 
-    proc new \{ namespace value \} \{
-        ::xml::element::appendText \[::xml::element::append \$namespace $element] .TEXT \$value
+    proc new \{ namespace value \{elementName $element\}\} \{
+        ::xml::element::appendText \[::xml::element::append \$namespace \$elementName] .TEXT \$value
     \}
 \}"
 
@@ -811,27 +812,27 @@ namespace eval ::wsdb::elements::${schemaAlias}::${parentElement}::$element \{
 
 # Procedures to write part of new element proc
 namespace eval ::wsdl::elements::modelGroup::sequence {
-    proc writer_maxOccurs1 {NewProc Index} {
+    proc writer_maxOccurs1 {NewProc Index Child} {
 
     return "
     if \{\[lindex \$childValuesList $Index\] ne \"\"\} \{
-        $NewProc \$typeNS \[lindex \$childValuesList $Index\]
+        $NewProc \$typeNS \[lindex \$childValuesList $Index\] $Child
     \} else \{"
     }
 
-    proc writer_maxOccurs1+ {NewProc Index} {
+    proc writer_maxOccurs1+ {NewProc Index Child} {
 
     return "
     if \{\[llength \[lindex \$childValuesList $Index\]\]\} \{
         foreach childValue \[lindex \$childValuesList $Index\] \{
-            $NewProc \$typeNS \$childValue
+            $NewProc \$typeNS \$childValue $Child
         \}
     \} else \{"
     }
 
-    proc writer_defaultMinOccurs1+ {NewProc Default} {
+    proc writer_defaultMinOccurs1+ {NewProc Default Child} {
     return "
-        $NewProc \$typeNS [list $Default]
+        $NewProc \$typeNS [list $Default] $Child
     \}"
     }
     proc writer_noDefaultMinOccurs1+ {NewProc Child} {
@@ -845,8 +846,8 @@ namespace eval ::wsdl::elements::modelGroup::sequence {
     \}"
     }
 
-    proc writer_defaultMinOccurs0 {NewProc Default} {
-    return [writer_defaultMinOccurs1+ $NewProc $Default]
+    proc writer_defaultMinOccurs0 {NewProc Default Child} {
+        return [writer_defaultMinOccurs1+ $NewProc $Default $Child]
     }
 
     proc writer_noDefaultMinOccurs0 { Child } {
@@ -975,9 +976,9 @@ proc ::wsdl::elements::modelGroup::sequence::writeNewProc {
 
     set ParentName $ParentData(name)
 
-    append script "\nproc ${namespace}::new \{ instanceNamespace childValuesList \} \{
+    append script "\nproc ${namespace}::new \{ instanceNamespace childValuesList \{elementName $ParentName\}\} \{
 
-    set typeNS \[::xml::element::append \$instanceNamespace $ParentName\]"
+    set typeNS \[::xml::element::append \$instanceNamespace \$elementName\]"
 
 
     if {$ChildCount == 1} {
@@ -999,16 +1000,16 @@ proc ::wsdl::elements::modelGroup::sequence::writeNewProc {
 
         # Step 1: handle non empty value based upon maxOccurs
         if {$MaxOccurs($Child) == 1} {
-            append script [writer_maxOccurs1 $NewProc $i]
+            append script [writer_maxOccurs1 $NewProc $i $Child]
         } else {
-            append script [writer_maxOccurs1+ $NewProc $i]
+            append script [writer_maxOccurs1+ $NewProc $i $Child]
         }
         # Step 2: We have a null value what to do?
         # Case A: minOccurs > 0
         if {$MinOccurs($Child) > 0} {
             # Check if default exists
             if {[info exists ChildData(default)]} {
-                append script [writer_defaultMinOccurs1+ $NewProc $ChildData(default)]
+                append script [writer_defaultMinOccurs1+ $NewProc $ChildData(default) $Child]
             } else {
                 # stick in passed in null value or whitespace
                 append script [writer_noDefaultMinOccurs1+ $NewProc $Child ]
@@ -1021,7 +1022,7 @@ proc ::wsdl::elements::modelGroup::sequence::writeNewProc {
         } elseif {
             [info exists ChildData(default)]
         } {
-            append script [writer_defaultMinOccurs0 $NewProc $ChildData(default)]
+            append script [writer_defaultMinOccurs0 $NewProc $ChildData(default) $Child]
         } else {
             append script [writer_noDefaultMinOccurs0 $Child]
         }
@@ -1048,6 +1049,7 @@ proc ::wsdl::elements::modelGroup::sequence::new {
 
     foreach Element $Elements {
         if {[string match "elements::*" [set ${Element}(type)]]} {
+            log Notice ">>mg::seq::new element='$Element', type='[set ${Element}(type)]'"
             append script [::wsdl::elements::modelGroup::sequence::addReference \
                 $schemaAlias $typeName $Element]
         } else {

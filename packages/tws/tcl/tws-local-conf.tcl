@@ -25,4 +25,3 @@ set ::tws::packages {
 
 # one more thing:
 ::tws::log Notice "tws-local-conf.tcl Finished loading local packages"
-
