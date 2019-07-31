@@ -66,7 +66,7 @@ proc ::<ws>return {tclNamespace} {
 
                             lappend inputMessageSignature "$type"
                             set tmpMinOccurs [set ::wsdb::elements::${xmlPrefix}::${inputMessageType}::MinOccurs($element)]
-                            log Notice "<ws>return element = '$element' minOccurs = '$tmpMinOccurs'"
+                            <ws>log Notice "<ws>return element = '$element' minOccurs = '$tmpMinOccurs'"
                             if {"$tmpMinOccurs" > 0} {
 
                                 <ws>log Warning ".........missing element $element"
@@ -154,18 +154,44 @@ SOAPAction: \"$SOAPAction\"
 $returnBody"
 
                     if {$missing == 0} {
+                        if {$protocol eq "http"} {
+                            set sock [socket $host $port]
+                            fconfigure $sock -translation binary
 
-                        set sock [socket $host $port]
-                        fconfigure $sock -translation binary
+                            puts -nonewline $sock $Request
 
-                        puts -nonewline $sock $Request
+                            flush $sock
+                            <ws>log Debug "<ws>return sending '$Request'"
+                            set result [read -nonewline $sock]
+                            <ws>log Debug "<ws>return received '$result'"
+                            close $sock
+                        } elseif {$protocol eq "https"} {
+                            set httpsHeaders [ns_set create]
+                            ns_set put $httpsHeaders Host "$hostHeader"
+                            ns_set put $httpsHeaders "Content-Type" "text/xml; charset=utf-8"
+                            ns_set put $httpsHeaders "SOAPAction" "\"$SOAPAction\""
+                            foreach ci $cookieList {
+                                set idx [string first ": " $ci]
+                                set h [string range $ci 0 [expr {$idx - 1}]]
+                                set v [string range $ci [expr {$idx + 2}] end]
+                                ns_set put $httpsHeaders $h $v
+                            }
+                            set requestedUrl [lindex [ns_conn request] 1]
+                            set result_dict [ns_http run -method POST -headers $httpsHeaders -body $returnBody \
+                                        -timeout 30.0 -hostname $hostHeader -keep_host_header https://$hostHeader$requestedUrl]
+                            <ws>log Debug "dict == [dict get $result_dict]"
 
-                        flush $sock
-                        log Notice "<ws>return sending '$Request'"
-                        set result [read -nonewline $sock]
-                        log Notice "<ws>return received '$result'"
-                        close $sock
+                            set status [dict get $result_dict status]
+ 
+                            set result [dict get $result_dict body]
 
+                            set header_set [dict get $result_dict headers]
+                            set responseHeadersList [list]
+                            for {set i 0} {$i < [ns_set size $header_set]} {incr i} {
+                                lappend responseHeadersList "[string totitle [ns_set key $header_set $i]]: [ns_set value $header_set $i]"
+                            }
+                            set result "$status\r\n[join $responseHeadersList "\r\n"]\r\n\r\n$result"
+                        }
                     } else {
                         set result "No Result"
                     }
