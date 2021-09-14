@@ -60,7 +60,9 @@ namespace eval ::tws::log {
     namespace export log
 }
 
-namespace eval :: {
-    namespace import ::tws::log::log
-    log Notice "ABC: Added log to global namespace"
+if {[llength [info procs log]] == 0} {
+    namespace eval :: {
+        namespace import ::tws::log::log
+        log Notice "ABC: Added log to global namespace"
+    }
 }
