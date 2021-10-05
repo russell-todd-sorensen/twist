@@ -613,18 +613,12 @@ proc ::wsdl::elements::modelGroup::sequence::getElementData {
     Child
     {ArrayName ""}
 } {
-    set ChildNameType [lindex $Child 0]
-    if {[set first [string first ":" $ChildNameType]] > -1} {
-        set Element [string range $ChildNameType 0 [expr $first -1 ]]
-        set Type [string range $ChildNameType [expr $first + 1] end]
-        if {"$Type" eq ""} {
-            set Type "xsd::string"
-        } elseif {[string first ":" "$Type"] == -1} {
-            set Type "xsd::$Type"
-        }
-    } else {
-        set Element $ChildNameType
+    set Type [lassign [split [lindex $Child 0] !] Element]
+
+    if {$Type == ""} {
         set Type "xsd::string"
+    } elseif {$Type eq [namespace tail $Type]} {
+        set Type "xsd::$Type"
     }
 
     # Seed facetArray with default values:
@@ -632,6 +626,7 @@ proc ::wsdl::elements::modelGroup::sequence::getElementData {
     array set facetArray [lindex $Child 1]
     array set facetArray [minMaxList $facetArray(minOccurs) $facetArray(maxOccurs)]
 
+    # Why is this here --v ?
     lappend Elements $Element
 
     # Store information for later use:

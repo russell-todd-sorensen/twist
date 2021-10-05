@@ -1,7 +1,7 @@
 
 <ws>namespace init ::stock2
 
-<ws>namespace schema ::stock2 "http://junom.com/ws/stockquoter2"
+<ws>namespace schema ::stock2 "https://home.highfivediet.com/twist/stockquoter2"
 
 # simpleTypes for stock2:
 <ws>type enum stock2::symbol {MSFT WMT XOM GM F GE}
@@ -18,8 +18,8 @@
 
 
 <ws>proc ::stock2::Stock {
-    {Symbol:stock2::symbol}
-    {Verbose:stock2::verbose {minOccurs 0 default "1"}}
+    {Symbol!stock2::symbol}
+    {Verbose!stock2::verbose {minOccurs 0 default "1"}}
 } {
     
     set StockValue [format %0.2f [expr 25.00 + [ns_rand 4].[format %0.2d [ns_rand 99]]]]
@@ -30,13 +30,13 @@
     }
     
 } returns {  
-    {Symbol:stock2::symbol          }
-    {Quote:stock2::quote           }
-    {DateOfChange:stock2::dateOfChange {minOccurs 0}}
-    {Name:stock2::name         {minOccurs 0 nillable true}}
-    {Trend:stock2::trend        {minOccurs 0}}
-    {DailyMove:stock2::dailyMove    {minOccurs 0}}
-    {LastMove:stock2::lastMove     {minOccurs 0}} 
+    {Symbol!stock2::symbol          }
+    {Quote!stock2::quote           }
+    {DateOfChange!stock2::dateOfChange {minOccurs 0}}
+    {Name!stock2::name         {minOccurs 0 nillable true}}
+    {Trend!stock2::trend        {minOccurs 0}}
+    {DailyMove!stock2::dailyMove    {minOccurs 0}}
+    {LastMove!stock2::lastMove     {minOccurs 0}} 
 }
 
 # <ws>proc creates StockRequest and StockResponse elements.
@@ -50,8 +50,8 @@
 # Notice that the return is the complexType StocksResponse which contains
 # multiple children of complexType 'StockResponse', created above:
 <ws>proc ::stock2::Stocks {
-    {Symbol:stock2::symbol {maxOccurs 8 default "MSFT"}}
-    {Verbose:stock2::verbose {minOccurs 0 default "1"}}
+    {Symbol!stock2::symbol {maxOccurs 8 default "MSFT"}}
+    {Verbose!stock2::verbose {minOccurs 0 default "1"}}
 } {
 
     set resultList [list]
@@ -60,7 +60,7 @@
     }
     return $resultList
 } returns {
-    {StockResponse:elements::stock2::StockResponse {maxOccurs 8}} 
+    {StockResponse!elements::stock2::StockResponse {maxOccurs 8}} 
 }
 
 

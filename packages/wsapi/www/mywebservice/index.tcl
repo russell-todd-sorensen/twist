@@ -13,33 +13,33 @@ namespace eval ::someothernamespace {
 <ws>namespace init ::mywebservice
 
 <ws>proc ::mywebservice::testit {
-    {a:xsd::string}
+    {a!xsd::string}
     {b {default "ooo" minOccurs 0}}
-    {c:string {default "xxx" minOccurs 0}}
+    {c!string {default "xxx" minOccurs 0}}
 } {
     return [list $a $b $c]
 
-} returns {A:string B:string C:string}
+} returns {A!string B!string C!string}
 
 # Derive a simpleType via enumeration:
 <ws>type enumeration mywebservice::symbol {MSFT WMT XOM GM F GE }
 
 <ws>proc ::mywebservice::EchoSymbol {
-    {Symbol:mywebservice::symbol}
+    {Symbol!mywebservice::symbol}
 } {
     return $Symbol
-} returns {Symbol:mywebservice::symbol}
+} returns {Symbol!mywebservice::symbol}
 
 # Derive a simpleType via pattern (regular expression):
 <ws>type pattern mywebservice::code {[0-9]{4}} xsd::integer
 
 <ws>proc ::mywebservice::EchoCode {
-    {Code:mywebservice::code} 
+    {Code!mywebservice::code} 
 } {
 
     return $Code
 
-} returns {Code:mywebservice::code}
+} returns {Code!mywebservice::code}
 
 # Standard Echo Server:
 <ws>proc ::mywebservice::Echo { 
@@ -50,18 +50,18 @@ namespace eval ::someothernamespace {
 } returns { Output }
 
 <ws>proc ::mywebservice::AddNumbers {
-    {FirstNum:integer {default "0" minOccurs 0}}
-    {SecondNum:integer {default "0" minOccurs 0}}
+    {FirstNum!integer {default "0" minOccurs 0}}
+    {SecondNum!integer {default "0" minOccurs 0}}
 } {
     return [expr $FirstNum + $SecondNum]
-} returns {Sum:xsd::integer}
+} returns {Sum!xsd::integer}
 
 <ws>proc ::mywebservice::MultiplyNumbers {
-    {FirstDecimal:decimal {default "0.0" minOccurs 0}}
-    {SecondDecimal:decimal {default "0.0" minOccurs 0}}
+    {FirstDecimal!decimal {default "0.0" minOccurs 0}}
+    {SecondDecimal!decimal {default "0.0" minOccurs 0}}
 } {
     return [expr $FirstDecimal * $SecondDecimal]
-} returns {Product:decimal}
+} returns {Product!decimal}
 
 # Use <ws>namespace import to copy an _existing_ proc
 # from another namespace. 
@@ -89,18 +89,18 @@ namespace eval ::someothernamespace {
 
 <ws>element sequence mywebservice::TestDecimalValueResponse {
     {StringToTest}
-    {IsTestDecimal:boolean}
-    {CanonicalValue:mywebservice::TestDecimal {minOccurs 0}}
+    {IsTestDecimal!boolean}
+    {CanonicalValue!mywebservice::TestDecimal {minOccurs 0}}
     {ErrorString}
 }
 
 <ws>proc ::mywebservice::EchoByte {
-    ByteAsIntegerIn:mywebservice::Byte
+    ByteAsIntegerIn!mywebservice::Byte
 } {
 
     return [list $ByteAsIntegerIn]
 
-} returns {ByteAsIntegerOut:mywebservice::Byte} 
+} returns {ByteAsIntegerOut!mywebservice::Byte} 
 
 
 # Example of using decimal validation proc to create canonical form
@@ -178,7 +178,7 @@ namespace eval ::someothernamespace {
 <ws>namespace finalize ::mywebservice
 
 # Freeze code to prevent changes and speed execution:
-<ws>namespace freeze ::mywebservice
+#<ws>namespace freeze ::mywebservice
 
 # Test procs with one return value
 <ws>log Debug "...."

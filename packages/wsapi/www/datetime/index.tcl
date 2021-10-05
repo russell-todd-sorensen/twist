@@ -5,18 +5,18 @@
 
 <ws>proc ::datetime::CheckDateTime {
 
-    {DateTime:dateTime}
+    {DateTime!dateTime}
 } {
 
     return [list $DateTime True]
 
-} returns {DateTime:dateTime IsDateTime:boolean}
+} returns {DateTime!dateTime IsDateTime!boolean}
 
 
 <ws>proc ::datetime::AddDurationToDateTime {
 
-    {StartDateTime:dateTime}
-    {Duration:duration}
+    {StartDateTime!dateTime}
+    {Duration!duration}
 } {
 
     set dateValid [::wsdb::types::tcl::dateTime::toArray $StartDateTime inDateArray]  
@@ -38,7 +38,7 @@
 
     return [list $StartDateTime $Duration $outDate]
 
-} returns {StartDateTime:dateTime Duration:duration EndDateTime:dateTime}
+} returns {StartDateTime!dateTime Duration!duration EndDateTime!dateTime}
 
 set minusOptional {(-)?}
 set minusOptionalAnchored {\A(-)?\Z}
@@ -88,13 +88,13 @@ set gMonthDayAnchored "\\A${gMonthDay}\\Z"
 
 
 <ws>proc ::datetime::DayNameFromNumber {
-    {DayNumber:datetime::dayNumber}
+    {DayNumber!datetime::dayNumber}
 } {
     return [lindex {
 	Monday Tuesday
 	Wednesday Thursday Friday
 	Saturday Sunday} $DayNumber]
-} returns {DayName:datetime::dayName}
+} returns {DayName!datetime::dayName}
 
 <ws>namespace finalize ::datetime
 

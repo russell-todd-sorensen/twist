@@ -526,7 +526,7 @@ proc ::<ws>proc {
         && [llength [lindex $procArgsList 0]] == 1
     } {
         # See if this is just the name of a complexType
-        set argTypeNameList [split [lindex $procArgsList {0 0}] ":"]
+        set argTypeNameList [split [lindex $procArgsList {0 0}] "!"]
         if {[llength $argTypeNameList] == 1} {
             set argType [lindex $argTypeNameList 0]
 

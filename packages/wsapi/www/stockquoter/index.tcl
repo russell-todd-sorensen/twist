@@ -1,7 +1,7 @@
 
 <ws>namespace init ::stock
 
-<ws>namespace schema ::stock "http://junom.com/stockquoter"
+<ws>namespace schema ::stock "https://home.highfivediet.com/twist/stockquoter"
 
 
 <ws>type enum stock::symbol {MSFT WMT XOM GM F GE}
@@ -20,33 +20,33 @@
 
 
 <ws>element sequence stock::StockResponse {  
-    {Symbol:stock::symbol          }
-    {Quote:stock::quote           }
-    {DateOfChange:stock::dateOfChange {minOccurs 0}}
-    {Name:stock::name         {minOccurs 0 nillable true}}
-    {Trend:stock::trend        {minOccurs 0}}
-    {DailyMove:stock::dailyMove    {minOccurs 0}}
-    {LastMove:stock::lastMove     {minOccurs 0}}
+    {Symbol!stock::symbol          }
+    {Quote!stock::quote           }
+    {DateOfChange!stock::dateOfChange {minOccurs 0}}
+    {Name!stock::name         {minOccurs 0 nillable true}}
+    {Trend!stock::trend        {minOccurs 0}}
+    {DailyMove!stock::dailyMove    {minOccurs 0}}
+    {LastMove!stock::lastMove     {minOccurs 0}}
 }
 
 
 <ws>element sequence stock::StockRequest {
-    {Symbol:stock::symbol}
-    {Verbose:stock::verbose {minOccurs 0 default "1"}}
+    {Symbol!stock::symbol}
+    {Verbose!stock::verbose {minOccurs 0 default "1"}}
 }
 
 <ws>doc element stock StockRequest {Defines StockRequest type.
     User supplies NYSE symbol and a verbose flag for additional data.}
 
 <ws>element sequence stock::StocksToQuote {
-    {Symbol:stockquoter::symbol {maxOccurs 8 default "MSFT"}}
-    {Verbose:stockquoter::verbose {minOccurs 0 default "1"}}
+    {Symbol!stockquoter::symbol {maxOccurs 8 default "MSFT"}}
+    {Verbose!stockquoter::verbose {minOccurs 0 default "1"}}
 }
 
 <ws>doc element stock StocksRequest {Multiple StockRequest in one document.}
 
 <ws>element sequence stock::StocksQuoted {
-    {StockResponse:elements::stock::StockResponse {maxOccurs 8}}
+    {StockResponse!elements::stock::StockResponse {maxOccurs 8}}
 }
 
 # This form just restates the inputs by name
@@ -70,8 +70,8 @@
 # Note that the return type name 'QuotesDummy' is unused,
 #  as the name is 'QuotesResponse', named after proc name.
 <ws>proc ::stock::Quotes {
-    {Symbol:stock::symbol {maxOccurs 3}}
-    {Verbose:stock::verbose {minOccurs 0 default 0}}
+    {Symbol!stock::symbol {maxOccurs 3}}
+    {Verbose!stock::verbose {minOccurs 0 default 0}}
 } {
     set resultList [list]
     foreach symbol $Symbol {
@@ -79,7 +79,7 @@
     }
     return $resultList
 } returns {
-    {QuotesDummy:elements::stock::StockResponse {maxOccurs 8}}
+    {QuotesDummy!elements::stock::StockResponse {maxOccurs 8}}
 }
 
 # Example of using just the complexType name as proc args:

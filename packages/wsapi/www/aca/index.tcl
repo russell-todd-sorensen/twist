@@ -55,11 +55,11 @@ append IDSFileNamePattern {Z_[1-9][0-9]{3}\-.+T[^\.]+(Z|[\+\-].+)_[0-9]{8}\.xml}
 
 <ws>proc ::aca::checkFileName {testString} {
     return [$::wsdb::types::aca::DocumentSystemFileNmType::validate $testString]
-} returns {isValid:boolean}
+} returns {isValid!boolean}
 
 set CheckReturnType {
-    {Value:string {minOccurs 1}}
-    {IsValid:boolean {minOccurs 1}}
+    {Value!string {minOccurs 1}}
+    {IsValid!boolean {minOccurs 1}}
 }
 
 <ws>element sequence aca::CheckTotalPayerResponse $CheckReturnType 

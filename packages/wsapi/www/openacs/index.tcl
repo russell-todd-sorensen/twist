@@ -5,7 +5,7 @@
 <ws>namespace init ::openacs
 
 # Initialize Schema
-<ws>namespace schema ::openacs "http://junom.com/openacs"
+<ws>namespace schema ::openacs "https://home.highfivediet.com/twist/openacs/"
 
 ### Simple Types
 
@@ -27,27 +27,28 @@
 
 <ws>proc ::openacs::CheckEmail {
 
-    {Email:openacs::email}
+    {Email!openacs::email}
 } {
     return [list "$Email" "True"]
-} returns {Email:openacs::email IsEmail:boolean}
+} returns {Email!openacs::email IsEmail!boolean}
 
 
 <ws>proc ::openacs::CheckPhone {
-    {Phone:openacs::phone}
+    {Phone!openacs::phone}
 } {
     return [list $Phone True]
-} returns {Phone:openacs::phone IsPhone:boolean}
+} returns {Phone!openacs::phone IsPhone!boolean}
 
 
 <ws>proc ::openacs::CheckNaturalNumber {
-    {NaturalNumber:openacs::naturalNum}
+    {NaturalNumber!openacs::naturalNum}
 } {
     return [list $NaturalNumber True]
-} returns {NaturalNumber:openacs::naturalNum IsNaturalNum:boolean}
+} returns {NaturalNumber!openacs::naturalNum IsNaturalNum!boolean}
 
 <ws>namespace finalize ::openacs
 
-<ws>namespace freeze ::openacs
+# uncomment below saves time:
+#<ws>namespace freeze ::openacs
 
 <ws>return ::openacs

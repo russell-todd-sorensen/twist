@@ -11,34 +11,34 @@
 <ws>type pattern address::zipPlusFour {[0-9]{5}(-[0-9]{4})?}
 
 <ws>element sequence address::fromAddress {
-    {addressId:address::testId {minOccurs 1 maxOccurs 1}}
-    {fromCompany:address::companyName {minOccurs 1 maxOccurs 1}}
-    {fromAddress1:address::addressLineOne {minOccurs 1 maxOccurs 1}}
-    {fromAddress2:address::addressLineTwo {minOccurs 0 maxOccurs 1}}
-    {fromCity:address::city {minOccurs 1 maxOccurs 1}}
-    {fromState:address::stateCode {minOccurs 1 maxOccurs 1}}
-    {fromZip:address::zipPlusFour {minOccurs 1 maxOccurs 1}}
+    {addressId!address::testId {minOccurs 1 maxOccurs 1}}
+    {fromCompany!address::companyName {minOccurs 1 maxOccurs 1}}
+    {fromAddress1!address::addressLineOne {minOccurs 1 maxOccurs 1}}
+    {fromAddress2!address::addressLineTwo {minOccurs 0 maxOccurs 1}}
+    {fromCity!address::city {minOccurs 1 maxOccurs 1}}
+    {fromState!address::stateCode {minOccurs 1 maxOccurs 1}}
+    {fromZip!address::zipPlusFour {minOccurs 1 maxOccurs 1}}
 }
 
 <ws>element sequence address::toAddress {
-    {addressId:address::testId {minOccurs 1 maxOccurs 1}}
-    {toCompany:address::companyName {minOccurs 1 maxOccurs 1}}
-    {toAddress1:address::addressLineOne {minOccurs 1 maxOccurs 1}}
-    {toAddress2:address::addressLineTwo {minOccurs 0 maxOccurs 1}}
-    {toCity:address::city {minOccurs 1 maxOccurs 1}}
-    {toState:address::stateCode {minOccurs 1 maxOccurs 1}}
-    {toZip:address::zipPlusFour {minOccurs 1 maxOccurs 1}}
+    {addressId!address::testId {minOccurs 1 maxOccurs 1}}
+    {toCompany!address::companyName {minOccurs 1 maxOccurs 1}}
+    {toAddress1!address::addressLineOne {minOccurs 1 maxOccurs 1}}
+    {toAddress2!address::addressLineTwo {minOccurs 0 maxOccurs 1}}
+    {toCity!address::city {minOccurs 1 maxOccurs 1}}
+    {toState!address::stateCode {minOccurs 1 maxOccurs 1}}
+    {toZip!address::zipPlusFour {minOccurs 1 maxOccurs 1}}
 }
 
 <ws>element sequence address::fromToEnvelope {
-    {envelopeId:address::testId }
-    {fromAddr:elements::address::fromAddress {form List}}
-    {toAddr:elements::address::toAddress {form List}}
+    {envelopeId!address::testId }
+    {fromAddr!elements::address::fromAddress {form List}}
+    {toAddr!elements::address::toAddress {form List}}
 }
 
 
 <ws>proc address::sendMail {
-    {From:elements::address::fromToEnvelope }
+    {From!elements::address::fromToEnvelope }
 } {
     return $From
 } returns {
@@ -46,16 +46,16 @@
 }
 
 <ws>proc address::sendMail2 {
-    {envelopeId:address::testId {minOccurs 1 default 125}}
-    {fromAddress:elements::address::fromAddress {form Element minOccurs 1 default {{1} {x} {y} {z} {a} {WA} {98198}}}}
-    {toAddress:elements::address::toAddress {form List minOccurs 1 default {{2} {a} {b} {c} {x} {WA} {98198-5115}}}}
+    {envelopeId!address::testId {minOccurs 1 default 125}}
+    {fromAddress!elements::address::fromAddress {form Element minOccurs 1 default {{1} {x} {y} {z} {a} {WA} {98198}}}}
+    {toAddress!elements::address::toAddress {form List minOccurs 1 default {{2} {a} {b} {c} {x} {WA} {98198-5115}}}}
 } {
     <ws>log Notice "$envelopeId='$envelopeId', fromAddress='$fromAddress', toAddress='$toAddress'"
     return [list $envelopeId $fromAddress $toAddress]
 } returns {
-    {envelopeId:address::testId }
-    {fromAddrress:elements::address::fromAddress {form List}}
-    {toAddrress:elements::address::toAddress {form List}}
+    {envelopeId!address::testId }
+    {fromAddrress!elements::address::fromAddress {form List}}
+    {toAddrress!elements::address::toAddress {form List}}
 }
 
 <ws>proc address::EchoAddress {
