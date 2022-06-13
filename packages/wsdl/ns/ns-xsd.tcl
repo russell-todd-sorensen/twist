@@ -57,11 +57,11 @@ proc ::wsdb::types::xsd::decimal::validateWithInfoArray {
 } {
     # Protect caller in case input value contains no digits
     if {[regexp {[0-9]+} $value]} {
-	variable pattern
-	upvar $digitsArrayName DA
-	return [regexp $pattern $value DA(all) DA(minus) DA(whole) DA(pointInt) DA(pointReal) DA(fraction)]
+        variable pattern
+        upvar $digitsArrayName DA
+        return [regexp $pattern $value DA(all) DA(minus) DA(whole) DA(pointInt) DA(pointReal) DA(fraction)]
     } else {
-	return 0
+        return 0
     }
 }
 
@@ -100,11 +100,12 @@ proc ::wsdb::types::xsd::decimal::ifDecimalCanonize {
     if {![::wsdb::types::xsd::decimal::validateWithInfoArray $collapsedValue dArray]} {
         return 0
     } else {
-	upvar $canonListVar canonList
-	if {"$digitsListVar" ne ""} {
-	    upvar $digitsListVar digitsList
-	}
+        upvar $canonListVar canonList
+        if {"$digitsListVar" ne ""} {
+            upvar $digitsListVar digitsList
+        }
     }
+
     set plusMinusCanon [string trim $dArray(minus) +]
     set wholeDigitsCanon [string trimleft $dArray(whole) -+0]
     set wholeDigits [string length $wholeDigitsCanon]
@@ -112,15 +113,18 @@ proc ::wsdb::types::xsd::decimal::ifDecimalCanonize {
     if {$wholeDigits == 0} {
         set wholeDigitsCanon 0
     }
+
     set foundFractionDigitsCanon [string trimright $dArray(fraction) 0]
     set foundFractionDigits [string length $foundFractionDigitsCanon]
+
     if {$foundFractionDigits == 0 && "$decimalPointCanon" eq "."} {
         set foundFractionDigitsCanon 0
     }
-    set foundDigits [expr $wholeDigits + $foundFractionDigits]
 
+    set foundDigits [expr $wholeDigits + $foundFractionDigits]
     set canonList  [list $plusMinusCanon $wholeDigitsCanon $decimalPointCanon $foundFractionDigitsCanon]
     set digitsList [list $foundDigits $foundFractionDigits]
+
     return 1
 }
 
@@ -167,11 +171,11 @@ proc ::wsdb::types::xsd::decimal::validate {
             lappend errorList "failed base test $base" 
             break
         }
-	# Removed pattern check, since it is done in ifDecimalCanonize
-	if {![regexp {[0-9]+} $value]} {
-	    lappend errorList "failed: no digits found in value (\$value)"
-	    break
-	}
+    # Removed pattern check, since it is done in ifDecimalCanonize
+    if {![regexp {[0-9]+} $value]} {
+        lappend errorList "failed: no digits found in value (\$value)"
+        break
+    }
         set valid 1
         break
     }
@@ -201,59 +205,57 @@ proc ::wsdb::types::xsd::decimal::validate {
 
 namespace eval ::wsdb::types::xsd {
 
-    
     variable minusOptional {(-)?}
     variable minusOptionalAnchored {\A(-)?\Z}
-    
+
     variable year {(-)?([0-9]{4}|[1-9]{1}[0-9]{4,})}
     variable yearAnchored {\A(-)?([0-9]{4}|[1-9]{1}[0-9]{4,})\Z}
-    
+
     variable timezone {(Z|(([\+\-]{1}))?((?:(14)(?::)(00))|(?:([0][0-9]|[1][0-3])(?::)([0-5][0-9]))))}
     variable timezoneOptional ${timezone}?
     variable timezoneAnchored "\\A$timezoneOptional\\Z"
-    
+
     variable gYear ${year}${timezoneOptional}
     variable gYearAnchored "\\A${gYear}\\Z"
-    
+
     variable day {([0][0-9]|[12][0-9]|[3][01])}
-    
+
     variable gDay ${day}${timezoneOptional}
     variable gDayAnchored "\\A${gDay}\\Z"
-    
+
     variable month {(?:([0][1-9]|[1][0-2]))}
-    
+
     variable gMonth ${month}${timezoneOptional}
     variable gMonthAnchored "\\A${gMonth}\\Z"
-    
+
     variable gYearMonth ${year}(?:-)${month}
     variable gYearMonthAnchored "\\A${gYearMonth}\\Z"
-    
+
     variable gMonthDay ${month}(?:-)${day}
     variable gMonthDayAnchored "\\A${gMonthDay}\\Z"
-    
 
     ::wsdl::types::simpleType::restrictByPattern \
-	xsd minusOptional xsd::string $minusOptionalAnchored;
+    xsd minusOptional xsd::string $minusOptionalAnchored;
+
+    ::wsdl::types::simpleType::restrictByPattern \
+    xsd year xsd::integer $yearAnchored
+
+    ::wsdl::types::simpleType::restrictByPattern \
+    xsd timeZone xsd::string $timezoneAnchored
+
+    ::wsdl::types::simpleType::restrictByPattern \
+    xsd gYear xsd::string $gYearAnchored
     
     ::wsdl::types::simpleType::restrictByPattern \
-	xsd year xsd::integer $yearAnchored
-    
+    xsd gMonth  xsd::string $gMonthAnchored
+
     ::wsdl::types::simpleType::restrictByPattern \
-	xsd timeZone xsd::string $timezoneAnchored
-    
+    xsd gDay  xsd::string $gDayAnchored
+
     ::wsdl::types::simpleType::restrictByPattern \
-	xsd gYear xsd::string $gYearAnchored
-    
+    xsd gYearMonth  xsd::string $gYearMonthAnchored
+
     ::wsdl::types::simpleType::restrictByPattern \
-	xsd gMonth  xsd::string $gMonthAnchored
-    
-    ::wsdl::types::simpleType::restrictByPattern \
-	xsd gDay  xsd::string $gDayAnchored
-    
-    ::wsdl::types::simpleType::restrictByPattern \
-	xsd gYearMonth  xsd::string $gYearMonthAnchored
-    
-    ::wsdl::types::simpleType::restrictByPattern \
-	xsd gMonthDay  xsd::string $gMonthDayAnchored
+    xsd gMonthDay  xsd::string $gMonthDayAnchored
 
 }

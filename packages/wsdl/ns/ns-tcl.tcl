@@ -24,9 +24,8 @@
 # NOTE TO FUTURE DEVELOPERS: namespace refers to XML namespaces not Tcl namespaces,
 # NOTE that XML namespaces have : separator, a legal char in a tcl namespace.
 
-
 foreach {type descr} {
-    
+
     alnum {Any Unicode alphabet or digit character.} 
 
     alpha {Any Unicode alphabet character.}
@@ -39,36 +38,36 @@ foreach {type descr} {
 
     digit {Any Unicode digit character. Note that this includes characters outside of the [0-9] range.}
 
-    double {Any of the valid forms for a double in Tcl, with optional surrounding whitespace. 
-	In case of under/overflow in the value, 0 is returned and the varname will contain -1.}
+    double {Any of the valid forms for a double in Tcl, with optional surrounding whitespace.
+    In case of under/overflow in the value, 0 is returned and the varname will contain -1.}
 
     false {Any of the forms allowed to Tcl_GetBoolean where the value is false.}
 
     graph {Any Unicode printing character, except space.}
 
-    integer {Any of the valid forms for an integer in Tcl, with optional surrounding whitespace. 
-	In case of under/overflow in the value, 0 is returned and the varname will contain -1.} 
+    integer {Any of the valid forms for an integer in Tcl, with optional surrounding whitespace.
+    In case of under/overflow in the value, 0 is returned and the varname will contain -1.}
 
-    lower {Any Unicode lower case alphabet character.} 
+    lower {Any Unicode lower case alphabet character.}
 
     print {Any Unicode printing character, including space.}
 
     punct {Any Unicode punctuation character.}
 
-    space {Any Unicode space character.} 
+    space {Any Unicode space character.}
 
     true {Any of the forms allowed to Tcl_GetBoolean where the value is true.}
 
     upper {Any upper case alphabet character in the Unicode character set.}
 
-    wordchar {Any Unicode word character. That is any alphanumeric character, 
-	and any Unicode connector punctuation characters (e.g. underscore).}
+    wordchar {Any Unicode word character. That is any alphanumeric character,
+    and any Unicode connector punctuation characters (e.g. underscore).}
 
     xdigit {Any hexadecimal digit character (\[0-9A-Fa-f]).}
 } {
-# Note this will change to a simpletype proc.
-::wsdl::types::primitiveType::new tcl $type "return \[string is $type -strict \$value]" "$descr"
-::wsdl::doc::document doc types tcl $type "$descr"
+    # Note this will change to a simpletype proc.
+    ::wsdl::types::primitiveType::new tcl $type "return \[string is $type -strict \$value]" "$descr"
+    ::wsdl::doc::document doc types tcl $type "$descr"
 }
 
 

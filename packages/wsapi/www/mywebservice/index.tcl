@@ -1,10 +1,10 @@
 namespace eval ::someothernamespace {
     proc hello { who } {
-	return "Hello $who"
+        return "Hello $who"
     }
 
     proc helloWorld { } {
-	return "Hello World!"
+        return "Hello World!"
     }
 }
 
@@ -112,11 +112,11 @@ namespace eval ::someothernamespace {
     set IsTestDecimal [::wsdb::types::mywebservice::TestDecimal4::validate $StringToTest errorList canonList]
 
     if {$IsTestDecimal} {
-	set CanonicalValue [join $canonList ""]
-	set ErrorString "No Error"
+        set CanonicalValue [join $canonList ""]
+        set ErrorString "No Error"
     } else {
-	set CanonicalValue ""
-	set ErrorString [join $errorList]
+        set CanonicalValue ""
+        set ErrorString [join $errorList]
     }
 
     return [list $StringToTest $IsTestDecimal $CanonicalValue $ErrorString]
@@ -138,25 +138,25 @@ namespace eval ::someothernamespace {
     set IsMyString [::wsdb::types::mywebservice::myString::validate $MyString errorList]
 
     if {$IsMyString} {
-	set ErrorForMyString "No Error in MyString"
+        set ErrorForMyString "No Error in MyString"
     } else {
-	set ErrorForMyString [join $errorList]
+        set ErrorForMyString [join $errorList]
     }
 
     set IsMyString2 [::wsdb::types::mywebservice::myString2::validate $MyOtherString errorList2]
 
     if {$IsMyString2} {
-	set ErrorForMyString2 "No Error in MyString"
+        set ErrorForMyString2 "No Error in MyString"
     } else {
-	set ErrorForMyString2 [join $errorList2]
+        set ErrorForMyString2 [join $errorList2]
     }
 
     set IsMyString3 [::wsdb::types::mywebservice::myString3::validate $MyThirdString errorList3]
 
     if {$IsMyString3} {
-	set ErrorForMyString3 "No Error in MyString"
+        set ErrorForMyString3 "No Error in MyString"
     } else {
-	set ErrorForMyString3 [join $errorList3]
+        set ErrorForMyString3 [join $errorList3]
     }
 
     return [list $MyString $ErrorForMyString $MyOtherString $ErrorForMyString2 $MyThirdString $ErrorForMyString3]
