@@ -227,6 +227,8 @@ $inputFormElements
 
                     set header "
 The following operations are supported. For a formal definition, please review the <a href=\"$url?WSDL\">Service Description</a>.
+<a href=\"./index.txt\">View the code which generated this web service.</a>
+<br>
 <br>
 <ul>
 $operationLinks
