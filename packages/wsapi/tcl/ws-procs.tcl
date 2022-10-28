@@ -197,9 +197,10 @@ $returnBody"
                     }
 
                     ns_return 200 text/html "<!DOCTYPE html>
-<html>
+<html lang=\"en-US\">
 <head>
- <title>$SOAPAction</title>
+<meta charset=\"utf-8\" >
+<title>$SOAPAction</title>
 </head>
 <body>
 <pre>[ns_quotehtml $Request]</pre>
@@ -225,11 +226,20 @@ $inputFormElements
                         append operationLinks "<li><a href=\"$url?op=$operation&mode=display\">$operation</a></li><br>\n"
                     }
 
-                    set header "
-The following operations are supported. For a formal definition, please review the <a href=\"$url?WSDL\">Service Description</a>.
+                    set header "<!DOCTYPE html>
+<html lang=\"en-US\">
+<head>
+<meta charset=\"utf-8\" >
+<title>WSDL Service Index</title>
+</head>
+<body>
+<div id=\"top\">
+The following operations are supported. For a formal definition,
+please review the <a href=\"$url?WSDL\">Service Description</a>.
+</div>
+<div id=\"links\">
 <a href=\"./index.txt\">View the code which generated this web service.</a>
-<br>
-<br>
+</div>
 <ul>
 $operationLinks
 </ul>"
@@ -528,7 +538,7 @@ proc ::<ws>proc {
         && [llength [lindex $procArgsList 0]] == 1
     } {
         # See if this is just the name of a complexType
-        set argTypeNameList [split [lindex $procArgsList {0 0}] "!"]
+        set argTypeNameList [split [lindex $procArgsList {0 0}] ":"]
         if {[llength $argTypeNameList] == 1} {
             set argType [lindex $argTypeNameList 0]
 
